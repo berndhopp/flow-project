@@ -20,6 +20,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
+import com.google.inject.util.*;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.function.DeploymentConfiguration;
 import com.vaadin.flow.server.*;
@@ -62,6 +63,7 @@ public class GuiceVaadinServlet extends VaadinServlet {
     private final Set<Class<? extends UI>> uiClasses = new HashSet<>();
     private final Set<Class<? extends RequestHandler>> requestHandlerClasses = new HashSet<>();
     private final Set<Class<? extends VaadinServiceInitListener>> vaadinServiceInitListenerClasses = new HashSet<>();
+    private Module module;
 
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
@@ -105,7 +107,7 @@ public class GuiceVaadinServlet extends VaadinServlet {
 
         final Set<Module> modulesFromPath = filterTypes(reflections.getSubTypesOf(Module.class))
                 .stream()
-                .filter(moduleClass -> !ScopeModule.class.equals(moduleClass))
+                .filter(moduleClass -> !VaadinModule.class.equals(moduleClass))
                 .map(moduleClass -> createModule(moduleClass, reflections, null))
                 .collect(toSet());
 
@@ -134,9 +136,9 @@ public class GuiceVaadinServlet extends VaadinServlet {
         this.sessionDestroyListenerClasses.addAll(filterTypes(reflections.getSubTypesOf(SessionDestroyListener.class)));
         this.serviceDestroyListeners.addAll(filterTypes(reflections.getSubTypesOf(ServiceDestroyListener.class)));
 
-        ScopeModule scopeModule = new ScopeModule(this);
+        Module vaadinModule = new VaadinModule(this);
 
-        this.injector = createInjector(scopeModule, combinedModules);
+        module = Modules.combine(vaadinModule, combinedModules);
 
         super.init(servletConfig);
     }
@@ -152,21 +154,23 @@ public class GuiceVaadinServlet extends VaadinServlet {
     protected void servletInitialized() {
         final VaadinService vaadinService = VaadinService.getCurrent();
 
+        this.injector = createInjector(module);
+
         vaadinService.addSessionInitListener(this::sessionInit);
 
         sessionInitListenerClasses
                 .stream()
-                .map(getInjector()::getInstance)
+                .map(injector::getInstance)
                 .forEach(vaadinService::addSessionInitListener);
 
         sessionDestroyListenerClasses
                 .stream()
-                .map(getInjector()::getInstance)
+                .map(injector::getInstance)
                 .forEach(vaadinService::addSessionDestroyListener);
 
         serviceDestroyListeners
                 .stream()
-                .map(getInjector()::getInstance)
+                .map(injector::getInstance)
                 .forEach(vaadinService::addServiceDestroyListener);
     }
 

@@ -99,7 +99,7 @@ public class DefaultInstantiator implements Instantiator {
                     .loadClass(property);
             if (I18NProvider.class.isAssignableFrom(providerClass)) {
 
-                return ReflectTools.createInstance(
+                return getOrCreate(
                         (Class<? extends I18NProvider>) providerClass);
             }
         } catch (ClassNotFoundException e) {

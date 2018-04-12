@@ -16,8 +16,10 @@
 package com.vaadin.guice.server;
 
 import static com.google.common.collect.Streams.stream;
+import com.google.inject.Key;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.di.*;
+import com.vaadin.flow.i18n.*;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
 
@@ -31,6 +33,7 @@ import java.util.stream.*;
 class GuiceInstantiator extends DefaultInstantiator {
 
     private final GuiceVaadinServlet servlet;
+    private final Key<I18NProvider> i18NProviderKey = Key.get(I18NProvider.class);
 
     /**
      * Creates a new guice instantiator instance.
@@ -53,5 +56,12 @@ class GuiceInstantiator extends DefaultInstantiator {
         Stream<VaadinServiceInitListener> guiceListeners = stream(servlet.getServiceInitListeners());
 
         return Stream.concat(super.getServiceInitListeners(), guiceListeners);
+    }
+
+    @Override
+    public I18NProvider getI18NProvider() {
+        final boolean bindingExists = servlet.getInjector().getExistingBinding(i18NProviderKey) != null;
+
+        return bindingExists ? getOrCreate(I18NProvider.class) : null;
     }
 }

@@ -71,7 +71,7 @@ public class GuiceInstantiatorTest {
     }
 
     @Test
-    public void createRouteTarget_springManagedBean_instanceIsCreated()
+    public void createRouteTarget_instanceIsCreated()
             throws ServletException {
         final GuiceVaadinServlet servlet = getServlet();
 
@@ -96,7 +96,14 @@ public class GuiceInstantiatorTest {
 
         Mockito.when(servletContext.getInitParameterNames())
                 .thenReturn(Collections.emptyEnumeration());
+
+        VaadinService vaadinService = Mockito.mock(VaadinService.class);
+
+        VaadinService.setCurrent(vaadinService);
+
         servlet.init(config);
+        servlet.servletInitialized();
+
         return servlet;
     }
 }

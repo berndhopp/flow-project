@@ -2,21 +2,19 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>flow-project</artifactId>
-        <groupId>com.vaadin</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <groupId>com.vaadin.addon</groupId>
     <artifactId>flow-guice-addon</artifactId>
     <name>Flow Guice Add-On</name>
+    <version>2.1.0-vaadin10</version>
     <packaging>jar</packaging>
     <description>Provides Google Guice integration for Vaadin applications.</description>
     <url>https://github.com/vaadin/guice</url>
     <properties>
         <Implementation-Title>Guice Vaadin integration</Implementation-Title>
         <Vaadin-License-Title>Apache License 2.0</Vaadin-License-Title>
-        <guava.version>23.5-jre</guava.version>
-        <guice.version>4.1.0</guice.version>
+        <Implementation-Vendor>Bernd Hopp</Implementation-Vendor>
+        <guava.version>24.1-jre</guava.version>
+        <guice.version>4.2.0</guice.version>
         <java-source.version>1.8</java-source.version>
         <java-target.version>1.8</java-target.version>
         <javassist.version>3.22.0-CR2</javassist.version>
@@ -25,12 +23,12 @@
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
         <maven-jar-plugin.version>2.3.1</maven-jar-plugin.version>
         <maven-surefire-plugin.version>2.10</maven-surefire-plugin.version>
-        <mockito-core.version>2.12.0</mockito-core.version>
+        <mockito-core.version>2.18.0</mockito-core.version>
         <project.build.encoding>UTF-8</project.build.encoding>
         <project.build.source>1.8</project.build.source>
         <project.build.target>1.8</project.build.target>
         <reflections.version>0.9.11</reflections.version>
-        <vaadin.version>[8.0.0,)</vaadin.version>
+        <flow.version>[1.0.0.beta4,)</flow.version>
     </properties>
     <dependencies>
         <dependency>
@@ -52,7 +50,7 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>flow</artifactId>
-            <version>${project.version}</version>
+            <version>${flow.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -122,11 +120,12 @@
                             <!-- Package format version - do not change -->
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
                             <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
+                            <Implementation-Vendor>${Implementation-Vendor}</Implementation-Vendor>
                         </manifestEntries>
                     </archive>
                     <!-- exclude other META-INF data under build directory -->
                     <includes>
-                        <include>META-INF/maven/${project.groupId}/${project.artifactId}/**</include>
+                        <include>META-INF/maven/com.vaadin/${project.artifactId}/**</include>
                         <include>com/**</include>
                     </includes>
                 </configuration>
@@ -156,13 +155,13 @@
                             <Implementation-Title>${Implementation-Title}</Implementation-Title>
                             <!-- Package format version - do not change -->
                             <Vaadin-Package-Version>1</Vaadin-Package-Version>
-
+                            <Implementation-Vendor>${Implementation-Vendor}</Implementation-Vendor>
                             <Vaadin-License-Title>${Vaadin-License-Title}</Vaadin-License-Title>
                         </manifestEntries>
                     </archive>
                     <!-- exclude other META-INF data under build directory -->
                     <includes>
-                        <include>META-INF/maven/${project.groupId}/${project.artifactId}/**</include>
+                        <include>META-INF/maven/com.vaadin/${project.artifactId}/**</include>
                         <include>com/**</include>
                     </includes>
                 </configuration>
