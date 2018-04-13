@@ -44,45 +44,6 @@ public class GuiceInstantiatorTest {
 
     }
 
-    @Test
-    public void createRouteTarget_pojo_instanceIsCreated()
-            throws ServletException {
-        final GuiceVaadinServlet servlet = getServlet();
-
-        Instantiator instantiator = servlet.getService().getInstantiator();
-
-        RouteTarget1 target1 = instantiator
-                .createRouteTarget(RouteTarget1.class, null);
-        Assert.assertNotNull(target1);
-    }
-
-    @Test
-    public void getServiceInitListeners_springManagedBeanAndJavaSPI_bothClassesAreInStream()
-            throws ServletException {
-        final GuiceVaadinServlet servlet = getServlet();
-
-        Instantiator instantiator = servlet.getService().getInstantiator();
-
-        Set<?> set = instantiator.getServiceInitListeners()
-                .map(Object::getClass).collect(Collectors.toSet());
-
-        Assert.assertTrue(set.contains(TestVaadinServiceInitListener.class));
-        Assert.assertTrue(set.contains(JavaSPIVaadinServiceInitListener.class));
-    }
-
-    @Test
-    public void createRouteTarget_instanceIsCreated()
-            throws ServletException {
-        final GuiceVaadinServlet servlet = getServlet();
-
-        Instantiator instantiator = servlet.getService().getInstantiator();
-
-        RouteTarget2 singleton = servlet.getInjector().getInstance(RouteTarget2.class);
-
-        Assert.assertEquals(singleton,
-                instantiator.createRouteTarget(RouteTarget2.class, null));
-    }
-
     public static GuiceVaadinServlet getServlet() throws ServletException {
         GuiceVaadinServlet servlet = new TestServlet();
 
